@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+    
+    environment {
+
+    }
+
+    tools {
+       nodejs 'nodejs-22-16-0'
+    }
+
+    stages {
+        stage('Installing Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Unit Test') {
+            steps {
+                sh 'npm test'
+            }
+        }
+
+        stage('SAST- SonarQube') {
+            steps {
+                sonar-scanner \
+                    -Dsonar.projectKey=student_app \
+                    -Dsonar.sources=. \
+                    -Dsonar.host.url=http://localhost:9000 \
+                    -Dsonar.login=sqp_e91e85ceec3a7673fd48cf8ec04558b16dae781d
+            }
+            steps {
+                stage('SonarQube Analysis') {
+                    def scannerHome = tool 'SonarScanner';
+                    withSonarQubeEnv() {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                    }
+                }
+                }
+            }
+        }
+    }
+}
