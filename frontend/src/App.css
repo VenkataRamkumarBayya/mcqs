@@ -161,6 +161,35 @@ h1 {
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+.qna-pair p.option {
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.qna-pair p.option:hover {
+  background-color: #d0e8ff;
+}
+
+.qna-pair p.option.selected.correct {
+  background-color: #28a745; /* Green for correct selected answer */
+  color: white;
+  font-weight: bold;
+}
+
+.qna-pair p.option.selected.incorrect {
+  background-color: #dc3545; /* Red for incorrect selected answer */
+  color: white;
+  font-weight: bold;
+}
+
+.qna-pair p.option.correct {
+  background-color: #28a745; /* Green for correct answer after selection */
+  color: white;
+}
+
 .back-button:hover {
   background-color: #5a6268; /* Darker gray on hover */
   transform: translateY(-2px);

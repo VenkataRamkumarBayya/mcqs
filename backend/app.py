@@ -3,11 +3,11 @@ from flask_cors import CORS
 from ml_models import (
     load_question_generator,
     load_answer_extractor,
-    generate_mcq,
-    generate_random_mcq
+    generate_mcq
 )
 import re
 import json
+import random
 
 app = Flask(__name__)
 CORS(app)
@@ -36,31 +36,45 @@ def generate_mcqs():
     # Split into sentences/paragraphs
     sentences = re.split(r'[.?!]\s*', raw_text)
     sentences = [s.strip() for s in sentences if 30 < len(s.strip()) < 500]
-    selected = sentences[:effective_num * 3]  # More for randomness pool
-
+    
+    # Ensure we have enough sentences to choose from
+    if len(sentences) < effective_num:
+        print(f"⚠️ Warning: Not enough sentences ({len(sentences)}) to generate {effective_num} questions. Will generate as many as possible.")
+    
+    random.shuffle(sentences)
 
     mcqs = []
-    attempts = 0
-    max_attempts = effective_num * 5  # Allow more attempts
+    used_contexts = set()
+    generated_questions = set()
 
-    while len(mcqs) < effective_num and attempts < max_attempts:
-        # Ensure there are sentences to process
-        if not selected:
-            print("⚠️ Not enough sentences to generate more MCQs.")
+    for context in sentences:
+        if len(mcqs) >= effective_num:
             break
 
-        mcq = generate_random_mcq(question_model, answer_model, selected)
-        if mcq:
-            # Basic check for uniqueness
-            if mcq not in mcqs:
-                print(f"🧠 Generated MCQ {len(mcqs) + 1}/{effective_num}")
-                mcqs.append(mcq)
-            else:
-                print("🔄 Duplicate MCQ generated, trying again.")
-        else:
-            print("❌ Failed to generate a valid MCQ in this attempt.")
+        # Skip context if it has been used
+        if context in used_contexts:
+            continue
         
-        attempts += 1
+        used_contexts.add(context)
+
+        mcq = generate_mcq(question_model, answer_model, context)
+        
+        if mcq:
+            question_text = mcq['question'].strip()
+            
+            # Skip if question is empty or already generated
+            if not question_text or question_text in generated_questions:
+                print(f"🔄 Duplicate or empty question generated, skipping.")
+                continue
+
+            print(f"🧠 Generated MCQ {len(mcqs) + 1}/{effective_num}")
+            mcqs.append(mcq)
+            generated_questions.add(question_text)
+        else:
+            print(f"❌ Failed to generate a valid MCQ from context: '{context[:50]}...'")
+
+    if len(mcqs) < effective_num:
+        print(f"⚠️ Warning: Could only generate {len(mcqs)} out of {effective_num} requested questions.")
 
     final_mcqs = []
     for i, mcq in enumerate(mcqs):

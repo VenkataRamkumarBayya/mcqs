@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './App.css';
 
@@ -6,6 +6,14 @@ function QnaResults() {
   const location = useLocation();
   const navigate = useNavigate();
   const { qnaPairs } = location.state || { qnaPairs: [] };
+  const [selectedAnswers, setSelectedAnswers] = useState({});
+
+  const handleOptionClick = (questionIndex, selectedOption) => {
+    setSelectedAnswers({
+      ...selectedAnswers,
+      [questionIndex]: selectedOption,
+    });
+  };
 
   const handleBack = () => {
     navigate('/');
@@ -21,22 +29,25 @@ function QnaResults() {
               {qnaPairs.map((item, index) => (
                 <div key={index} className="qna-pair">
                   <p><strong>Question {item.question_number}:</strong> {item.question}</p>
-                  {Object.entries(item.options).map(([key, value]) => (
-                    <p
-                      key={key}
-                      style={{
-                      fontWeight: key === item.answer ? 'bold' : 'normal',
-                      color: key === item.answer ? 'lightgreen' : 'white',
-                      backgroundColor: key === item.answer ? '#1e3d2f' : 'black',
-                      padding: '6px 12px',
-                      borderRadius: '4px',
-                      marginBottom: '4px',
-                      }}
-                    >
-                      {key}. {value}
-                    </p>
-                  ))}
-                  <p><strong>Correct Answer:</strong> {item.answer} — {item.options[item.answer]}</p>
+                  {Object.entries(item.options).map(([key, value]) => {
+                    const selection = selectedAnswers[index];
+                    const isCorrect = item.answer === key;
+                    let className = "option";
+
+                    if (selection === key) { // If this option has been selected
+                      className += isCorrect ? " correct" : " incorrect";
+                    }
+
+                    return (
+                      <p
+                        key={key}
+                        className={className}
+                        onClick={() => !selection && handleOptionClick(index, key)} // Allow selection only once
+                      >
+                        {key}. {value}
+                      </p>
+                    );
+                  })}
                 </div>
               ))}
             </div>
