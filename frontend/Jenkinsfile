@@ -39,7 +39,7 @@ pipeline {
                     withSonarQubeEnv('sonar') {
                         sh 'echo $SONAR_HOME'
                         sh '''
-                            $SONAR_HOME/bin/sonar-scanner \
+                            $SONAR_HOME/sonar-scanner \
                                 -Dsonar.projectKey=student_app \
                                 -Dsonar.sources=./frontend/ \
                                 -Dsonar.host.url=http://localhost:9000 \
