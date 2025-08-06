@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         SONAR_HOME = tool 'sonar-scanner';
-        SONAR_ID = credentials('sonar_student')
+        SONAR_ID = credentials('sonar')
         DOCKER_IMAGE_NAME = 'student_frontend'
         DOCKER_USERNAME = 'Rajesh'
         CHART_PATH = './helm'
