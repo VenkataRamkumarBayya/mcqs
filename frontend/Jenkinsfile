@@ -59,15 +59,15 @@ pipeline {
         stage('Trivy Docker Imgage Scan') {
             steps {
                 sh '''
-                    trivy image ${DOCKER_IMAGE_NAME}:${BUILD_NUMBER} \
+                    trivy image ${DOCKER_USERNAME}/${DOCKER_IMAGE_NAME}:${BUILD_NUMBER} \
                     --severity LOW,MEDIUM,HIGH \
-                    --exit code 0 \
+                    --exit-code 0 \
                     --quiet \
                     --format json -o student_trivy_MEDIUM_result.json
 
-                    trivy image ${DOCKER_IMAGE_NAME}:${BUILD_NUMBER} \
+                    trivy image ${DOCKR_USERNAME}/${DOCKER_IMAGE_NAME}:${BUILD_NUMBER} \
                     --severity CRITICAL \
-                    --exit code 0 \
+                    --exit-code 0 \
                     --quiet \
                     --format json -o student_trivy_CRITICAL_result.json
                 '''
