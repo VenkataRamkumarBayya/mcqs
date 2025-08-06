@@ -87,28 +87,28 @@ pipeline {
             }
         }
 
-        stage('Docker Image Push') {
-            withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USER')]) {
-                sh 'docker push ${DOCKER_USERNAME}/${DOCKER_IMAGE}:${BUILD_NUMBER}'
-            }
-        }
+        // stage('Docker Image Push') {
+        //     withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USER')]) {
+        //         sh 'docker push ${DOCKER_USERNAME}/${DOCKER_IMAGE}:${BUILD_NUMBER}'
+        //     }
+        // }
 
-        stage('Stop & Run In Docker composer') {
-            steps {
-                sh '''
-                    docker compose down || true
-                '''
-                sh 'docker compose up'
-            }
-        }
+        // stage('Stop & Run In Docker composer') {
+        //     steps {
+        //         sh '''
+        //             docker compose down || true
+        //         '''
+        //         sh 'docker compose up'
+        //     }
+        // }
 
-        stage('Deploy In K8s') {
-            steps {
-                helm upgrade --install student_app ${CHART_PATH} \
-                --namespace student_app \
+        // stage('Deploy In K8s') {
+        //     steps {
+        //         helm upgrade --install student_app ${CHART_PATH} \
+        //         --namespace student_app \
                 
 
-            }
-        }
+        //     }
+        // }
     }
 }
