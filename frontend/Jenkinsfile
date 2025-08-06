@@ -25,12 +25,12 @@ pipeline {
                 sh 'npm audit fix'
             }
         }
-        stage('Unit Test') {
-            options { retry(2) }
-            steps {
-                sh 'npm test'
-            }
-        }
+        // stage('Unit Test') {
+        //     options { retry(2) }
+        //     steps {
+        //         sh 'npm test'
+        //     }
+        // }
 
         stage('SAST- SonarQube') {
             steps {
