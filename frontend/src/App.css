@@ -173,24 +173,52 @@ h1 {
   background-color: #d0e8ff;
 }
 
-.qna-pair p.option.selected.correct {
-  background-color: #28a745; /* Green for correct selected answer */
-  color: white;
+.qna-pair p.option.pre-highlight {
+  background-color: #ffeb3b; /* A soft yellow for pre-highlighting */
   font-weight: bold;
-}
-
-.qna-pair p.option.selected.incorrect {
-  background-color: #dc3545; /* Red for incorrect selected answer */
-  color: white;
-  font-weight: bold;
+  border: 1px solid #fbc02d;
 }
 
 .qna-pair p.option.correct {
-  background-color: #28a745; /* Green for correct answer after selection */
+  background-color: #28a745; /* Green for correct answer */
   color: white;
+  font-weight: bold;
+}
+
+.qna-pair p.option.incorrect {
+  background-color: #dc3545; /* Red for incorrect answer */
+  color: white;
+  font-weight: bold;
+}
+
+.correct-answer-display {
+  margin-top: 10px;
+  padding: 8px;
+  background-color: #e0ffe0; /* Light green background */
+  border: 1px solid #a3e9a4;
+  border-radius: 5px;
+  color: #1b5e20;
+  font-weight: bold;
 }
 
 .back-button:hover {
   background-color: #5a6268; /* Darker gray on hover */
+  transform: translateY(-2px);
+}
+
+.start-quiz-button {
+  background-color: #28a745; /* Green for start quiz button */
+  color: white;
+  padding: 14px 30px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.2em;
+  cursor: pointer;
+  margin-top: 30px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.start-quiz-button:hover {
+  background-color: #218838; /* Darker green on hover */
   transform: translateY(-2px);
 }

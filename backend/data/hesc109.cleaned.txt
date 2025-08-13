@@ -1,0 +1,21 @@
+Friction always opposes the applied force.
+The force of friction acts between the surface of the floor, or on a table.
+Friction is caused by the interlocking of irregularities in the two surfaces.
+Friction at the instant an object starts moving is slightly smaller than the static friction.
+Friction is desirable in some situations.
+Friction can be increased by making a surface rough.
+Friction can be reduced by using lubricants.
+Rolling reduces friction.
+Air exerts frictional force on objects moving through it.
+Water and other liquids exert force of friction when objects move through them.
+Friction depends on the nature of surfaces in contact.
+For a given pair of surfaces, friction depends on how hard the two surfaces press against each other.
+Static friction comes into play when we try to move an object at rest.
+Sliding friction comes into play when an object is sliding over another.
+Sliding friction is smaller than static friction.
+Friction is important for many of our activities.
+The sole of the shoes and the tyres of the vehicle are treaded to increase friction.
+Friction is sometimes undesirable.
+When one body rolls over another body, rolling friction comes into play.
+In many machines, friction is reduced by using ball bearings.
+Fluid friction can be minimized by giving suitable shapes to bodies moving in fluids.

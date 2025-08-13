@@ -1,0 +1,9 @@
+A moving object like a ball rolling on the ground slows down. 
+In science, a push or a pull on an object is called a force. 
+The strength of a force is usually expressed by its magnitude. 
+The force resulting due to the action of muscles is known as the muscular force. 
+Muscular force can be applied only when it is in contact with an object, it is also called a contact force. 
+The force of friction between the surface of the ball and the ground brings the moving ball to rest. 
+The force exerted by a magnet is an example of a non-contact force. 
+The force exerted by a magnet on a piece of iron is also a non-contact force. 
+The force exerted by a charged body is also a non-contact force.

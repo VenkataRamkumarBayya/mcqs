@@ -10,12 +10,12 @@ embed_model = SentenceTransformer("all-MiniLM-L6-v2")
 
 # Load question generation model
 def load_question_generator():
-    print("📘 Loading question generator: mrm8488/t5-base-finetuned-question-generation-ap")
+    print("(Book) Loading question generator: mrm8488/t5-base-finetuned-question-generation-ap")
     return pipeline("text2text-generation", model="mrm8488/t5-base-finetuned-question-generation-ap")
 
 # Load answer extraction model
 def load_answer_extractor():
-    print("📘 Loading answer extractor: deepset/roberta-base-squad2")
+    print("(Book) Loading answer extractor: deepset/roberta-base-squad2")
     return pipeline("question-answering", model="deepset/roberta-base-squad2")
 
 # Normalize text for deduplication (lowercase, strip articles, remove punctuation)
@@ -66,16 +66,16 @@ def mask_answer_in_context(context, answer):
 def generate_mcq(question_model, answer_model, context: str):
     try:
         if len(context.strip().split()) < 5 or context.lower().startswith("chapter"):
-            print("⛔ Skipping: invalid or short context")
+            print("(Stop) Skipping: invalid or short context")
             return None
 
         qa_result = answer_model(question="What is the key concept?", context=context)
         answer = qa_result.get('answer', '').strip()
-        print(f"🔍 Extracted answer: {answer}")
+        print(f"(Magnifying Glass) Extracted answer: {answer}")
 
         # Add filters for answer quality
         if not answer or len(answer.split()) > 5 or len(answer) < 3:
-            print(f"⛔ Skipping: Invalid answer extracted: '{answer}'")
+            print(f"(Stop) Skipping: Invalid answer extracted: '{answer}'")
             return None
 
         prompt_answer = " ".join(answer.split()[:10]) + "..." if len(answer.split()) > 12 else answer
@@ -88,16 +88,16 @@ def generate_mcq(question_model, answer_model, context: str):
         question = re.sub(r'[^a-zA-Z0-9 ,?]+', '', question).strip()
         if not question.endswith("?"):
             question += "?"
-        print(f"❓ Generated question: {question}")
+        print(f"(Question Mark) Generated question: {question}")
 
-        # ⛔ Filter malformed or irrelevant questions - GENERALIZED
+        # (Stop) Filter malformed or irrelevant questions - GENERALIZED
         q_text = question.strip()
         q_lower = q_text.lower()
 
         # Generic question filter
         generic_endings = ["known as?", "called?", "named?"]
         if any(q_lower.endswith(ending) for ending in generic_endings) and len(q_lower.split()) < 7:
-            print(f"⛔ Skipping: Overly generic question: \"{q_text}\"")
+            print(f"(Stop) Skipping: Overly generic question: \"{q_text}\"")
             return None
 
         # List of common bad question starters
@@ -118,18 +118,18 @@ def generate_mcq(question_model, answer_model, context: str):
         ]
 
         if any(phrase in q_lower for phrase in BAD_PHRASES):
-            print(f"⛔ Skipping: Question contains a nonsensical phrase: \"{q_text}\"")
+            print(f"(Stop) Skipping: Question contains a nonsensical phrase: \"{q_text}\"")
             return None
 
         # Check for bad starters
         if any(q_lower.startswith(starter) for starter in BAD_STARTERS):
-            print(f"⛔ Skipping: Question starts with a generic pattern: \"{q_text}\"")
+            print(f"(Stop) Skipping: Question starts with a generic pattern: \"{q_text}\"")
             return None
 
         # Check for bad endings (word before the '?')
         words = q_text.rstrip('?').split()
         if words and words[-1].lower() in BAD_ENDINGS:
-            print(f"⛔ Skipping: Question ends with a preposition/article/conjunction: \"{q_text}\"")
+            print(f"(Stop) Skipping: Question ends with a preposition/article/conjunction: \"{q_text}\"")
             return None
 
         # Other general checks
@@ -138,14 +138,14 @@ def generate_mcq(question_model, answer_model, context: str):
             q_text.count("?") > 1 or
             len(words) < 4
         ):
-            print(f"⛔ Skipping: Malformed or too short question: \"{q_text}\"")
+            print(f"(Stop) Skipping: Malformed or too short question: \"{q_text}\"")
             return None
 
         # Filters
         if question.lower().startswith(answer.lower()) or \
            (answer.lower() in question.lower() and question.lower().count(answer.lower()) > 1) or \
            question.lower() in ["true?", "false?", "none?", "yes?", "no?"]:
-            print("⛔ Skipping: Invalid question.")
+            print("(Stop) Skipping: Invalid question.")
             return None
 
         # Options
@@ -153,7 +153,7 @@ def generate_mcq(question_model, answer_model, context: str):
         distractors = [d for d in distractors if normalize_option(d) != normalize_option(answer)]
 
         if len(distractors) < 3:
-            print("⚠️ Not enough quality distractors. Skipping.")
+            print("(Warning) Not enough quality distractors. Skipping.")
             return None
 
         all_options = list(dict.fromkeys([answer] + distractors))[:4]
@@ -170,7 +170,7 @@ def generate_mcq(question_model, answer_model, context: str):
                 break
 
         if len(final_options) < 4:
-            print("⚠️ Less than 4 distinct options after normalization. Skipping.")
+            print("(Warning) Less than 4 distinct options after normalization. Skipping.")
             return None
 
         random.shuffle(final_options)
@@ -189,5 +189,5 @@ def generate_mcq(question_model, answer_model, context: str):
         }
 
     except Exception as e:
-        print(f"❌ Error generating MCQ: {e}")
+        print(f"(X Mark) Error generating MCQ: {e}")
         return None

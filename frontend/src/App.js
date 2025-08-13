@@ -37,7 +37,14 @@ function Home() {
 
       if (response.ok) {
         const data = await response.json();
-        navigate('/results', { state: { qnaPairs: data } }); // Redirect to results page
+        // Read file content to pass to results page for subsequent quiz generation
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const rawText = e.target.result;
+          navigate('/results', { state: { qnaPairs: data, rawText: rawText, numQuestions: numQuestions } });
+        };
+        reader.readAsText(file);
+
       } else {
         const errorData = await response.json();
         console.error('Backend Error:', errorData);
